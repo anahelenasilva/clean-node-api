@@ -6,8 +6,8 @@ interface SutTupes {
   controllerStub: Controller
 }
 
-const makeSut = (): SutTupes => {
-  class ControllerSutb implements Controller{
+const makeController = (): Controller => {
+  class ControllerSutb implements Controller {
     handle (httpRequest: HttpRequest): Promise<HttpResponse> {
       const httpResponse: HttpResponse = {
         statusCode: 200,
@@ -22,7 +22,11 @@ const makeSut = (): SutTupes => {
     }
   }
   
-  const controllerStub = new ControllerSutb();
+  return new ControllerSutb();
+}
+
+const makeSut = (): SutTupes => {
+  const controllerStub = makeController();
   const sut = new LogControllerDecorator(controllerStub)
 
   return {
