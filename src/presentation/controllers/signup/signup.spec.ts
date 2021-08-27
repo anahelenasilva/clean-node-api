@@ -156,7 +156,7 @@ describe('SignUp Controller', () => {
   test('Should return 500 if EmailValidator throws exception', async () => {
     const { sut, emailValidatorSutb } = makeSut()
     jest.spyOn(emailValidatorSutb, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
+      throw new Error('Internal server error')
     })
 
     const httpRequest = {
@@ -169,7 +169,7 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body).toEqual(new ServerError('Internal server error'))
   })
 
   test('Should call AddAccount with correct input', async () => {
@@ -195,7 +195,7 @@ describe('SignUp Controller', () => {
   test('Should return 500 if AddAccount throws exception', async () => {
     const { sut, addAccountSutb } = makeSut()
     jest.spyOn(addAccountSutb, 'add').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => reject(new Error()))
+      return await new Promise((resolve, reject) => reject(new Error('Internal server error')))
     })
 
     const httpRequest = {
@@ -208,7 +208,7 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body).toEqual(new ServerError('Internal server error'))
   })
 
   test('Should return 200 if valid input is provided', async () => {
