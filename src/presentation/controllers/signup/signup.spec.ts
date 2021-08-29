@@ -35,13 +35,7 @@ const makeEmailValidator = (): EmailValidator => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (account: AddAccountModel): Promise<AccountModel> {
-      const fakeAccount = {
-        id: 'valid_id',
-        name: 'valid_name',
-        email: 'valid_email@mail.com',
-        password: 'valid_password'
-      }
-      return await new Promise(resolve => resolve(fakeAccount))
+      return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
 
@@ -56,6 +50,12 @@ const makeFakeHttpRequest = (): HttpRequest => ({
       passwordConfirmation: 'any_password'}
 })
 
+const makeFakeAccount = (): AccountModel => ({
+  id: 'valid_id',
+  name: 'valid_name',
+  email: 'valid_email@mail.com',
+  password: 'valid_password'
+})
 
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
@@ -184,11 +184,6 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body).toEqual({
-      id: 'valid_id',
-      name: 'valid_name',
-      email: 'valid_email@mail.com',
-      password: 'valid_password'
-    })
+    expect(httpResponse.body).toEqual(makeFakeAccount())
   })
 })
