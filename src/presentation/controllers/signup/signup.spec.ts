@@ -1,7 +1,7 @@
 
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 
-import { EmailValidator, AddAccount, AccountModel, AddAccountModel } from './signup-protocols'
+import { EmailValidator, AddAccount, AccountModel, AddAccountModel, HttpRequest } from './signup-protocols'
 
 import { SignUpController } from './signup'
 
@@ -47,6 +47,15 @@ const makeAddAccount = (): AddAccount => {
 
   return new AddAccountStub()
 }
+
+const makeFakeHttpRequest = (): HttpRequest => ({
+    body: {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password'}
+})
+
 
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
@@ -107,14 +116,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 400 if password confirmation fails', async () => {
     const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'invalid_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
@@ -124,14 +126,7 @@ describe('SignUp Controller', () => {
     const { sut, emailValidatorSutb } = makeSut()
     jest.spyOn(emailValidatorSutb, 'isValid').mockReturnValueOnce(false)
 
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'invalid_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
@@ -141,14 +136,7 @@ describe('SignUp Controller', () => {
     const { sut, emailValidatorSutb } = makeSut()
     const isValidSpy = jest.spyOn(emailValidatorSutb, 'isValid')
 
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
@@ -159,14 +147,7 @@ describe('SignUp Controller', () => {
       throw new Error('Internal server error')
     })
 
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError('Internal server error'))
@@ -176,14 +157,7 @@ describe('SignUp Controller', () => {
     const { sut, addAccountSutb } = makeSut()
     const addSpy = jest.spyOn(addAccountSutb, 'add')
 
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
@@ -198,14 +172,7 @@ describe('SignUp Controller', () => {
       return await new Promise((resolve, reject) => reject(new Error('Internal server error')))
     })
 
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError('Internal server error'))
@@ -214,14 +181,7 @@ describe('SignUp Controller', () => {
   test('Should return 200 if valid input is provided', async () => {
     const { sut } = makeSut()
 
-    const httpRequest = {
-      body: {
-        name: 'valid_name',
-        email: 'valid_email@mail.com',
-        password: 'valid_password',
-        passwordConfirmation: 'valid_password'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body).toEqual({
