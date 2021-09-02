@@ -1,6 +1,6 @@
 import { InvalidParamError } from '../../errors'
 
-import { badRequest, serverError, ok } from '../../helpers/http-helper'
+import { badRequest, serverError, ok } from '../../helpers/http/http-helper'
 
 import { AddAccount, Controller, HttpRequest, HttpResponse, Validation } from './signup-protocols'
 
