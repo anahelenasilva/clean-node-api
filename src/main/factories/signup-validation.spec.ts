@@ -15,9 +15,7 @@ describe('SignUpValidation Factory', () => {
       validations.push(new RequiredFieldValidation(field))
     }
 
-    expect(ValidationComposite).toHaveBeenCalledWith([
-      validations
-    ])
+    expect(ValidationComposite).toHaveBeenCalledWith(validations)
   });
 
 });
