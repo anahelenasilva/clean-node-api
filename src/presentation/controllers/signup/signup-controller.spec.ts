@@ -1,9 +1,9 @@
 
 import { ServerError } from '../../errors'
 
-import { AddAccount, AccountModel, AddAccountModel, HttpRequest, Validation } from './signup-protocols'
+import { AddAccount, AccountModel, AddAccountModel, HttpRequest, Validation } from './signup-controller-protocols'
 
-import { SignUpController } from './signup'
+import { SignUpController } from './signup-controller'
 import { badRequest } from '../../helpers/http/http-helper'
 
 interface SutTypes {
