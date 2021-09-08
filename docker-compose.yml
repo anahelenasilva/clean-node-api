@@ -13,10 +13,12 @@ services:
     build: .
     image: voting-system #just the name of the image
     restart: always
-    command: npm start
+    command: npm run debug
     volumes:
       - ./dist:/usr/src/voting-system/dist
+      - ./package.json:/usr/src/voting-system/package.json
     ports:
       - "5050:5050"
+      - "9222:9222"
     links:
       - mongo
