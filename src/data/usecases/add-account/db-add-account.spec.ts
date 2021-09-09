@@ -4,7 +4,7 @@ import { DbAddAccount } from './db-add-account'
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   name: 'valid_name',
-  email: 'any@any.com',
+  email: 'valid@email.com',
   password: 'hashed_password'
 })
 
@@ -37,7 +37,7 @@ const makeAddAccountRepository = (): AddAccountRepository => {
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
-      const account = makeFakeAccount()
+      const account: AccountModel = { id: '', email: '', name: '', password: '' }
       return new Promise(resolve => resolve(account))
     }
   }
@@ -122,11 +122,7 @@ describe('DbAddAccount Usecase', () => {
 
   test('Should return an account if on success', async () => {
     const { sut } = makeSut()
-    const accountData = {
-      name: 'valid_name',
-      email: 'valid@email.com',
-      password: 'valid_password'
-    }
+    const accountData = makeFakeAccount()
     const account = await sut.add(accountData)
     expect(account).toEqual({
       id: 'valid_id',
@@ -141,13 +137,21 @@ describe('DbAddAccount Usecase', () => {
 
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
 
-    const accountData = {
-      name: 'valid_name',
-      email: 'valid@email.com',
-      password: 'valid_password'
-    }
+    const accountData = makeFakeAccount()
     await await sut.add(accountData)
 
     expect(loadSpy).toHaveBeenCalledWith('valid@email.com')
   })
+
+  // test('Should return an empty account if LoadAccountByEmailRepository finds an account with given email', async () => {
+  //   const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+  //   const emptyAccount: AccountModel = { id: '', email: '', name: '', password: '' }
+
+  //   jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+  //     .mockReturnValueOnce(new Promise(resolve => resolve(emptyAccount)))
+
+  //   const accountData = makeFakeAccount()
+  //   const account = await sut.add(accountData)
+  //   expect(account).toEqual(emptyAccount)
+  // })
 })
