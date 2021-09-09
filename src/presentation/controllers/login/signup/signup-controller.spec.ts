@@ -1,10 +1,17 @@
+import { EmailInUseError, ServerError } from '../../../errors'
 
-import { EmailInUseError, ServerError } from '../../errors'
-
-import { AddAccount, AccountModel, AddAccountModel, HttpRequest, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
+import {
+  AddAccount,
+  AccountModel,
+  AddAccountModel,
+  HttpRequest,
+  Validation,
+  Authentication,
+  AuthenticationModel
+} from './signup-controller-protocols'
 
 import { SignUpController } from './signup-controller'
-import { badRequest, forbidden, serverError } from '../../helpers/http/http-helper'
+import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
 
 interface SutTypes {
   sut: SignUpController
@@ -29,7 +36,7 @@ const makeSut = (): SutTypes => { // system under test
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add(account: AddAccountModel): Promise<AccountModel> {
       return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
@@ -39,7 +46,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth(authentication: AuthenticationModel): Promise<string> {
       return 'any_token'
     }
   }
@@ -58,7 +65,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate (input: any): Error | null {
+    validate(input: any): Error | null {
       return null
     }
   }
