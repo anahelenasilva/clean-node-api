@@ -1,10 +1,10 @@
 
-import { ServerError } from '../../errors'
+import { EmailInUseError, ServerError } from '../../errors'
 
 import { AddAccount, AccountModel, AddAccountModel, HttpRequest, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
 
 import { SignUpController } from './signup-controller'
-import { badRequest, serverError } from '../../helpers/http/http-helper'
+import { badRequest, forbidden, serverError } from '../../helpers/http/http-helper'
 
 interface SutTypes {
   sut: SignUpController
@@ -97,6 +97,17 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError('Internal server error'))
+  })
+
+  test('Should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
+      const emptyAccount: AccountModel = { id: '', name: '', email: '', password: '' }
+      return await new Promise((resolve) => resolve(emptyAccount))
+    })
+
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
   test('Should return 200 if valid input is provided', async () => {
