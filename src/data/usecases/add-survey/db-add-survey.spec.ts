@@ -43,7 +43,7 @@ describe('DbAddSurvey Usecase', () => {
     expect(addSpy).toHaveBeenCalledWith(surveyData)
   })
 
-  // test('Should throw if DbAddSurveyRepository throws an exception', async () => {
+  // test('Should throw if AddSurveyRepository throws an exception', async () => {
   //   const { sut, addSurveyRepositoryStub } = makeSut()
 
   //   jest.spyOn(addSurveyRepositoryStub, 'add')
