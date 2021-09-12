@@ -5,7 +5,6 @@ import env from '../config/env'
 
 import { Collection } from 'mongodb'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
-import { sign } from 'jsonwebtoken'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -37,7 +36,7 @@ describe('Survey Routes', () => {
             image: 'http://image-name.com'
           },
           {
-            answer: 'Answer 2',
+            answer: 'Answer 2'
           }]
         })
         .expect(403)

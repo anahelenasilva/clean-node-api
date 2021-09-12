@@ -51,5 +51,4 @@ describe('Bcrypt Adapter', () => {
   //   const isValid = await sut.compare('any_input', 'any_hash')
   //   expect(isValid).toBe(true)
   // })
-
 })

@@ -4,11 +4,11 @@ import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-ac
 import { AccountModel } from '../add-account/db-add-account-protocols'
 
 export class DbLoadAccountByToken implements LoadAccountByToken {
-  constructor(
+  constructor (
     private readonly decrypter: Decrypter,
     private readonly loadAccountByTokenRepository: LoadAccountByTokenRepository) { }
 
-  async load(accessToken: string, role?: string | undefined): Promise<AccountModel> {
+  async load (accessToken: string, role?: string | undefined): Promise<AccountModel> {
     const token = await this.decrypter.decrypt(accessToken)
 
     if (token) {
@@ -18,5 +18,4 @@ export class DbLoadAccountByToken implements LoadAccountByToken {
 
     return new Promise(resolve => resolve({} as AccountModel))
   }
-
 }

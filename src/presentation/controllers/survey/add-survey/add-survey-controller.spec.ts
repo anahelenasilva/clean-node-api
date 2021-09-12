@@ -1,6 +1,6 @@
 import { HttpRequest, Validation, AddSurvey, AddSurveyModel } from './add-survey-controller-protocols'
-import { AddSurveyController } from './add-survey-controller';
-import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper';
+import { AddSurveyController } from './add-survey-controller'
+import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -14,17 +14,17 @@ const makeFakeRequest = (): HttpRequest => ({
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate(input: any): Error | null {
+    validate (input: any): Error | null {
       return null
     }
   }
 
-  return new ValidationStub();
+  return new ValidationStub()
 }
 
 const makeAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
-    async add(data: AddSurveyModel): Promise<void> {
+    async add (data: AddSurveyModel): Promise<void> {
       return new Promise(resolve => resolve())
     }
   }

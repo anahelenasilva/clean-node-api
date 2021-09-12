@@ -1,7 +1,7 @@
-import { Validation } from '../../../../../presentation/protocols';
-import { RequiredFieldValidation } from '../../../../../validation/validators';
-import { ValidationComposite } from '../../../../../validation/validators/validation-composite';
-import { makeAddSurveyValidation } from './add-survey-validation-factory';
+import { Validation } from '../../../../../presentation/protocols'
+import { RequiredFieldValidation } from '../../../../../validation/validators'
+import { ValidationComposite } from '../../../../../validation/validators/validation-composite'
+import { makeAddSurveyValidation } from './add-survey-validation-factory'
 
 jest.mock('../../../../../validation/validators/validation-composite')
 
@@ -15,6 +15,5 @@ describe('AddSurveyValidation Factory', () => {
     }
 
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
-  });
-
-});
+  })
+})
