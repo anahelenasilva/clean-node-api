@@ -6,13 +6,19 @@
     "esModuleInterop": true,
     "strictNullChecks": true,
     "sourceMap": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "@/tests/*": [
+        "../tests/*"
+      ],
+      "@/*": [
+        "*"
+      ]
+    }
   },
   "include": [
     "src"
   ],
-  "exclude": [
-    "**/*.spec.js",
-    "**/*.test.js"
-  ]
+  "exclude": []
 }
