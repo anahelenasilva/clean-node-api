@@ -12,7 +12,7 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeDecrypterStub = (): Decrypter => {
   class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string> {
+    async decrypt(value: string): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }
@@ -22,7 +22,7 @@ const makeDecrypterStub = (): Decrypter => {
 
 const makeLoadAccountByTokenRepositoryStub = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken (token: string): Promise<AccountModel> {
+    async loadByToken(token: string): Promise<AccountModel> {
       return new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
@@ -30,7 +30,7 @@ const makeLoadAccountByTokenRepositoryStub = (): LoadAccountByTokenRepository =>
   return new LoadAccountByTokenRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterStub: Decrypter
   loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository

@@ -6,7 +6,7 @@ import { Validation } from '../../../protocols/validation'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth(authentication: AuthenticationModel): Promise<string> {
       return 'any_token'
     }
   }
@@ -16,7 +16,7 @@ const makeAuthentication = (): Authentication => {
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate (input: any): Error | null {
+    validate(input: any): Error | null {
       return null
     }
   }
@@ -33,7 +33,7 @@ const makeFakeRequest = (): HttpRequest => (
   }
 )
 
-interface SutTypes {
+type SutTypes = {
   sut: LoginController
   validationStub: Validation
   authenticationStub: Authentication
