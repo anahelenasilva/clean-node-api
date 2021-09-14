@@ -1,6 +1,6 @@
 export type SurveyResultModel = {
   id: string
-  surveyid: string,
+  surveyId: string,
   accountId: string,
   answer: string,
   date: Date
