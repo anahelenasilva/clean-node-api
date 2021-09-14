@@ -1,8 +1,8 @@
 
 import { LoadSurveyByIdRepository } from '@/data/usecases/load-survey-by-id/db-load-survey-by-id-protocols'
-import { AddSurveyModel, AddSurveyRepository } from '../../../../data/protocols/db/survey/add-survey-protocols'
-import { LoadSurveysRepository } from '../../../../data/protocols/db/survey/load-surveys-repository'
-import { SurveyModel } from '../../../../domain/models/survey'
+import { AddSurveyModel, AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-protocols'
+import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository'
+import { SurveyModel } from '@/domain/models/survey'
 
 import { MongoHelper } from '../helpers/mongo-helper'
 
