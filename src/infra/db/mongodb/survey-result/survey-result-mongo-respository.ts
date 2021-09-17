@@ -28,7 +28,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
       answer: res?.value?.answer,
       accountId: res?.value?.accountId
     }
-
     console.log('saveResultInserted', obj)
 
     return obj
