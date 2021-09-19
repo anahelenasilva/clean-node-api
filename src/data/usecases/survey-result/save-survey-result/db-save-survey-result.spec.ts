@@ -1,3 +1,4 @@
+import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result'
 import MockDate from 'mockdate'
 
 import { DbSaveSurveyResult } from './db-save-survey-result'
@@ -29,12 +30,22 @@ const makeFakeSurveyResultData = (): SaveSurveyResultParams => ({
 
 const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return await new Promise(resolve => resolve(makeSurveyResult()))
+    async save(data: SaveSurveyResultParams): Promise<void> {
+      return await new Promise(resolve => resolve())
     }
   }
 
   return new SaveSurveyResultRepositoryStub()
+}
+
+const makeLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
+  class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
+    loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
+      return Promise.resolve(makeSurveyResult())
+    }
+  }
+
+  return new LoadSurveyResultRepositoryStub()
 }
 
 type SutTypes = {
@@ -44,7 +55,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const saveSurveyResultRepositoryStub = makeSaveSurveyResultRepository()
-  const sut = new DbSaveSurveyResult(saveSurveyResultRepositoryStub)
+  const loadSurveyResultRepositoryStub = makeLoadSurveyResultRepository()
+  const sut = new DbSaveSurveyResult(saveSurveyResultRepositoryStub, loadSurveyResultRepositoryStub)
 
   return {
     sut,

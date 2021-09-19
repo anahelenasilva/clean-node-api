@@ -13,7 +13,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
 
   constructor() { }
 
-  async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
+  async save(data: SaveSurveyResultParams): Promise<void> {
     const surveyCollection = await MongoHelper.getCollection('surveyResults')
     const res = await surveyCollection.findOneAndUpdate({
       surveyId: data.surveyId,
@@ -27,7 +27,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       upsert: true
     })
     console.log('saveResultInserted', res?.value)
-    console.log('data.accountId', data.accountId)
+    console.log('data.accountId', data.accountId.toString())
 
     const surveyResult = await this.loadBySurveyId(data.surveyId/*, data.accountId*/)
 
@@ -49,7 +49,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       question: ''
     }
 
-    return obj2
+    //return obj2
   }
 
   async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
