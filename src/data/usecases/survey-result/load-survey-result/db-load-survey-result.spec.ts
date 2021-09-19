@@ -54,4 +54,10 @@ describe('DbLoadSurveyResult usecase', () => {
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_id')
   })
 
+  test('Should return SurveyResultModel on success', async () => {
+    const { sut } = makeSut()
+    const surveyResult = await sut.load('any_id')
+    expect(surveyResult).toEqual(makeSurveyResult())
+  })
+
 })
