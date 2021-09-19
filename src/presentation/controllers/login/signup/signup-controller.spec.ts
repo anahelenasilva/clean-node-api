@@ -12,6 +12,7 @@ import {
 
 import { SignUpController } from './signup-controller'
 import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
+import { mockAccountModel } from '@/domain/test'
 
 type SutTypes = {
   sut: SignUpController
@@ -37,7 +38,7 @@ const makeSut = (): SutTypes => { // system under test
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add(account: AddAccountParams): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(makeFakeAccount()))
+      return await new Promise(resolve => resolve(mockAccountModel()))
     }
   }
 
@@ -72,13 +73,6 @@ const makeValidation = (): Validation => {
 
   return new ValidationStub()
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})
 
 describe('SignUp Controller', () => {
   test('Should call AddAccount with correct input', async () => {
