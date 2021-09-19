@@ -7,8 +7,9 @@ import { SurveyResultModel } from '@/domain/models/survey-result';
 import { SaveSurveyResultParams } from '@/domain/usecases/save-survey-result';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { QueryBuilder } from '@/infra/db/mongodb/helpers';
+import { LoadSurveyResult } from '@/domain/usecases/load-survey-result';
 
-export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
+export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResult {
 
   constructor() { }
 
@@ -26,8 +27,9 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
       upsert: true
     })
     console.log('saveResultInserted', res?.value)
+    console.log('data.accountId', data.accountId)
 
-    const surveyResult = await this.loadBySurveyId(data.surveyId, data.accountId)
+    const surveyResult = await this.loadBySurveyId(data.surveyId/*, data.accountId*/)
 
     const obj: SurveyResultModel = {
       surveyId: surveyResult.surveyId,
@@ -50,7 +52,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
     return obj2
   }
 
-  async loadBySurveyId(surveyId: string, accountId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
@@ -91,7 +93,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         },
         currentAccountAnswer: {
           $push: {
-            $cond: [{ $eq: ['$data.accountId', accountId] }, '$data.answer', '$invalid']
+            $cond: [{ $eq: ['$data.accountId', 'accountId'] }, '$data.answer', '$invalid']
           }
         }
       })
