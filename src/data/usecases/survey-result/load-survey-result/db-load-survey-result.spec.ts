@@ -11,29 +11,32 @@ const makeSurveyResult = (): SurveyResultModel => ({
   question: 'any_question',
   answers: [{
     answer: 'any_answer',
-    count: 1,
-    percent: 50
+    count: 0,
+    percent: 0
   },
   {
     answer: 'other_answer',
     image: 'any_image',
-    count: 10,
-    percent: 80
+    count: 0,
+    percent: 0
   }],
   date: new Date()
 })
 
 const makeSurveyModel = (): SurveyModel => ({
-  id: 'any_id',
+  id: 'any_survey_id',
   answers: [{
     answer: 'any_answer'
+  },
+  {
+    answer: 'other_answer',
+    image: 'any_image',
   }],
   date: new Date(),
   question: 'any_question',
 })
 
 const makeLoadSurveyResultRepositoryStub = (): LoadSurveyResultRepository => {
-
   class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
     async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
       return Promise.resolve(makeSurveyResult())
@@ -105,6 +108,16 @@ describe('DbLoadSurveyResult usecase', () => {
 
     await sut.loadBySurveyId('any_id')
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should return SurveyResultModel with all ansers with count 0 if LoadSurveyResultByIdRespository returns null', async () => {
+    const { sut, loadSurveyResultRepositoryStub } = makeSut()
+
+    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
+      .mockReturnValueOnce(Promise.resolve({} as SurveyResultModel))
+
+    const surveyResult = await sut.loadBySurveyId('any_id')
+    expect(surveyResult).toEqual(makeSurveyResult())
   })
 
 })
