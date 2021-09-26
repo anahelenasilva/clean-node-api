@@ -29,12 +29,24 @@ const makeLoadSurveyById = (): LoadSurveyById => {
   return new LoadSurveyByIdStub()
 }
 
+type SutTypes = {
+  sut: LoadSurveyResultController,
+  loadSurveyByIdStub: LoadSurveyById
+}
+
+const makeSut = (): SutTypes => {
+  const loadSurveyByIdStub = makeLoadSurveyById()
+  const sut = new LoadSurveyResultController(loadSurveyByIdStub)
+  return {
+    sut,
+    loadSurveyByIdStub
+  }
+}
 
 describe('LoadSurveyResult Controller', () => {
 
   test('Should call LoadSurveyById with correct id', async () => {
-    const loadSurveyByIdStub = makeLoadSurveyById()
-    const sut = new LoadSurveyResultController(loadSurveyByIdStub)
+    const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
     await sut.handle(mockRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
