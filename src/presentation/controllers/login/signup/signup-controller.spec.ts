@@ -13,6 +13,7 @@ import {
 import { SignUpController } from './signup-controller'
 import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
 import { mockAccountModel } from '@/domain/test'
+import { AuthenticationModel } from '@/domain/models/authentication'
 
 type SutTypes = {
   sut: SignUpController
@@ -47,8 +48,11 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(authentication: AuthenticationParams): Promise<string> {
-      return 'any_token'
+    async auth(authentication: AuthenticationParams): Promise<AuthenticationModel> {
+      return {
+        accessToken: 'any_token',
+        name: 'valid_name'
+      }
     }
   }
 
@@ -117,7 +121,7 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body).toEqual({ accessToken: 'any_token' })
+    expect(httpResponse.body).toEqual({ accessToken: 'any_token', name: 'valid_name' })
   })
 
   test('Should call Validation with correct input', async () => {

@@ -1,13 +1,17 @@
-import { InvalidParamError, MissingParamError } from '../../../errors'
-import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { InvalidParamError, MissingParamError } from '@/presentation/errors'
+import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest, Authentication, AuthenticationParams } from './login-controller-protocols'
 import { LoginController } from './login-controller'
-import { Validation } from '../../../protocols/validation'
+import { Validation } from '@/presentation/protocols/validation'
+import { AuthenticationModel } from '@/domain/models/authentication'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(authentication: AuthenticationParams): Promise<string> {
-      return 'any_token'
+    async auth(authentication: AuthenticationParams): Promise<AuthenticationModel> {
+      return {
+        accessToken: 'any_token',
+        name: 'any_name'
+      }
     }
   }
 
@@ -121,7 +125,7 @@ describe('Login Controller', () => {
 
   it('should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise(resolve => resolve('')))
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise(resolve => resolve({} as AuthenticationModel)))
     const httpRequest = makeFakeRequest()
 
     const httpResponse = await sut.handle(httpRequest)
@@ -142,6 +146,6 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeRequest()
 
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token', name: 'any_name' }))
   })
 })
