@@ -3,11 +3,11 @@ import { Validation } from '../../../protocols/validation'
 import { Controller, HttpRequest, HttpResponse, Authentication } from './login-controller-protocols'
 
 export class LoginController implements Controller {
-  constructor (
+  constructor(
     private readonly authentication: Authentication,
     private readonly validation: Validation) { }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { email, password } = httpRequest.body
 
@@ -16,12 +16,12 @@ export class LoginController implements Controller {
         return badRequest(error)
       }
 
-      const accessToken = await this.authentication.auth({ email, password })
+      const { accessToken, name } = await this.authentication.auth({ email, password })
       if (!accessToken || accessToken === '') {
         return unauthorized()
       }
 
-      return ok({ accessToken })
+      return ok({ accessToken, name })
     } catch (error) {
       return serverError(error)
     }
