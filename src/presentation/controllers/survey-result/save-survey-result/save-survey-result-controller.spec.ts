@@ -32,7 +32,8 @@ const makeFakeSurveyResult = (): SurveyResultModel => ({
   answers: [{
     answer: 'test',
     count: 1,
-    percent: 100
+    percent: 100,
+    isCurrentAccountAnswer: false
   }],
   question: 'any_question',
   date: new Date(),

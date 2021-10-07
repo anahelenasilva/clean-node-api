@@ -29,7 +29,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     console.log('saveResultInserted', res?.value)
     console.log('data.accountId', data.accountId.toString())
 
-    const surveyResult = await this.loadBySurveyId(data.surveyId/*, data.accountId*/)
+    const surveyResult = await this.loadBySurveyId(data.surveyId, data.accountId)
 
     const obj: SurveyResultModel = {
       surveyId: surveyResult.surveyId,
@@ -44,7 +44,8 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       answers: [{
         answer: res?.value?.answer,
         count: 0,
-        percent: 0
+        percent: 0,
+        isCurrentAccountAnswer: false
       }],
       question: ''
     }
@@ -52,8 +53,9 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     //return obj2
   }
 
-  async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId(surveyId: string, accountId: string): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+
     const query = new QueryBuilder()
       .match({
         surveyId: new ObjectId(surveyId)
@@ -93,7 +95,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
         },
         currentAccountAnswer: {
           $push: {
-            $cond: [{ $eq: ['$data.accountId', 'accountId'] }, '$data.answer', '$invalid']
+            $cond: [{ $eq: ['$data.accountId', accountId] }, '$data.answer', '$invalid']
           }
         }
       })

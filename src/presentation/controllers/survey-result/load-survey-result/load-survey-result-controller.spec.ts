@@ -9,8 +9,9 @@ import { LoadSurveyResult } from '@/domain/usecases/load-survey-result'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 
 const mockRequest = (): HttpRequest => ({
+  accountId: 'any_account_id',
   params: {
-    surveyId: 'any_id'
+    surveyId: 'any_id',
   }
 })
 
@@ -31,7 +32,8 @@ const makeFakeSurveyResult = (): SurveyResultModel => ({
     image: 'any_image',
     answer: 'any_answer',
     count: 0,
-    percent: 0
+    percent: 0,
+    isCurrentAccountAnswer: false
   }],
   date: new Date(),
 })
@@ -48,7 +50,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 
 const makeLoadSurveyResult = (): LoadSurveyResult => {
   class LoadSurveyByIdStub implements LoadSurveyResult {
-    loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
+    loadBySurveyId(surveyId: string, accountId: string): Promise<SurveyResultModel> {
       return new Promise(resolve => resolve(makeFakeSurveyResult()))
     }
   }
@@ -106,11 +108,11 @@ describe('LoadSurveyResultController', () => {
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
-  test('Should call LoadSurveyResult with correct id', async () => {
+  test('Should call LoadSurveyResult with correct values', async () => {
     const { sut, loadSurveyResultStub } = makeSut()
     const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultStub, 'loadBySurveyId')
     await sut.handle(mockRequest())
-    expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_id')
+    expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_id', 'any_account_id')
   })
 
   test('Should return 500 if LoadSurveyResult throws an exception', async () => {
